@@ -1,6 +1,6 @@
-import express from 'express';
-import {Bot} from 'facebook-messenger-bot'; // import Bot class
-import {Elements} from 'facebook-messenger-bot';
+const express = require('express');
+const Bot = require('facebook-messenger-bot').Bot; // import Bot class
+const Elements = require('facebook-messenger-bot').Elements;
 
 const myPageAccessToken = 'EAARJA41lo9EBABA80zYkkX1A1qHCsKSZBzkNhdEuLzdMQZBsLR5KoNrgPlMNxHcfZA5ZCyBEF1kumjlgMvbRgJmsY0ShJXWbWSVdfDFMcdjkgOgr36UquT9DSCfXidrtVZCZC2Tb1sLCbaLgWD7mSvaG9eqC1PbTZB8zCKrLV7NsQZDZD';
 const myVerification = 'test';
@@ -9,6 +9,7 @@ const app = express();
 const bot = new Bot(myPageAccessToken, myVerification); // create bot instance
 
 app.use('/facebook', bot.router()); // use the router
+console.log('listenting at 3000');
 app.listen(3000);
 
 bot.on('message', async message => {

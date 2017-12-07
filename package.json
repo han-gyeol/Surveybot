@@ -11,5 +11,9 @@
   "dependencies": {
     "express": "^4.16.2",
     "facebook-messenger-bot": "^0.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2105": "0.0.0"
   }
 }
