@@ -12,6 +12,10 @@ app.use('/facebook', bot.router()); // use the router
 console.log('listenting at 3000');
 app.listen(3000);
 
+app.get('/', (req, res) => {
+    res.send('I am a chatbot');
+});
+
 bot.on('message', async message => {
     const {sender} = message;
 
