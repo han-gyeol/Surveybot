@@ -2,6 +2,9 @@ import express from 'express';
 import {Bot} from 'facebook-messenger-bot'; // import Bot class
 import {Elements} from 'facebook-messenger-bot';
 
+const myPageAccessToken = 'EAARJA41lo9EBABA80zYkkX1A1qHCsKSZBzkNhdEuLzdMQZBsLR5KoNrgPlMNxHcfZA5ZCyBEF1kumjlgMvbRgJmsY0ShJXWbWSVdfDFMcdjkgOgr36UquT9DSCfXidrtVZCZC2Tb1sLCbaLgWD7mSvaG9eqC1PbTZB8zCKrLV7NsQZDZD';
+const myVerification = 'test';
+
 const app = express();
 const bot = new Bot(myPageAccessToken, myVerification); // create bot instance
 
