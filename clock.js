@@ -13,13 +13,13 @@ setInterval(function() {
 
     setAlarms(time);
     sendQuestions(time);
-    
+
 }, 60000);
 
 
 // Reset alarms at 4AM everyday
 function setAlarms(time) {
-    if (time === '00:40' || time === '0:48') {
+    if (time === '21:44' || time === '0:48') {
         console.log("SETTING ALARM");
     // if (time === '04:00' || time === '4:00') {
         fs.readFile(`./data/participants.JSON`, function (err, data) {
@@ -28,7 +28,7 @@ function setAlarms(time) {
             participants.forEach(function(participant){
                 fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
                     var alarms = JSON.parse(data);
-                    var month = new Date().getMonth().toString();
+                    var month = (new Date().getMonth()+1).toString();
                     var day = new Date().getDate().toString();
                     var alarmTimes = generateAlarms(participant);
 
@@ -83,8 +83,6 @@ function generateAlarms(participant) {
 
 // Generate a random number between 'start' and 'end' numbers
 function generateInBetweenNumber(start, end) {
-    console.log('start: ' + start);
-    console.log('end: '+  end);
     return Math.floor(start + Math.random() * (end - start));
 }
 

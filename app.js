@@ -11,7 +11,3 @@ const bot = new BootBot({
 
 initDialogs(bot);
 bot.start();
-
-
-const startSession = require('./dialogs/session.js').startSession;
-startSession('1642683679098021');
