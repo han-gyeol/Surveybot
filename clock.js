@@ -1,8 +1,10 @@
-var fs = require('fs');
-var moment = require('moment');
-var format = 'HH:mm';
+const fs = require('fs');
+const moment = require('moment');
+const format = 'HH:mm';
 
-// tick every 1 sec
+const startSession = require('./dialogs/session.js').startSession;
+
+// tick every 60 sec
 setInterval(function() {
     var date = new Date();
     var hour = date.getHours();
@@ -11,18 +13,20 @@ setInterval(function() {
 
     setAlarms(time);
     sendQuestions(time);
-}, 1000);
+    
+}, 60000);
 
 
 // Reset alarms at 4AM everyday
 function setAlarms(time) {
-    if (time === '04:00' || time === '4:00') {
+    if (time === '00:40' || time === '0:48') {
+        console.log("SETTING ALARM");
+    // if (time === '04:00' || time === '4:00') {
         fs.readFile(`./data/participants.JSON`, function (err, data) {
             var participants = JSON.parse(data);
 
             participants.forEach(function(participant){
-                // fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
-                fs.readFile(`./data/alarms/temp_id.JSON`, function (err, data) {
+                fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
                     var alarms = JSON.parse(data);
                     var month = new Date().getMonth().toString();
                     var day = new Date().getDate().toString();
@@ -33,8 +37,7 @@ function setAlarms(time) {
                         times: alarmTimes
                     });
 
-                    // fs.writeFile(`./data/alarms/${participant.id}.JSON`, JSON.stringify(alarms, null, 4));
-                    fs.writeFile(`./data/alarms/temp_id.JSON`, JSON.stringify(alarms, null, 4));
+                    fs.writeFileSync(`./data/alarms/${participant.id}.JSON`, JSON.stringify(alarms, null, 4));
                 });
             });
         });
@@ -60,8 +63,9 @@ function generateAlarms(participant) {
     //     alarmTimes.push(alarmHour + ":" + alarmMin);
     // }
 
+    var time = parseInt(wakeTime[HOUR]);
     while (alarmTimes.length < 7) {
-        var alarmHour = generateInBetweenNumber(parseInt(wakeTime[HOUR]), parseInt(sleepTime[HOUR])).toString();
+        var alarmHour = generateInBetweenNumber(time, (time+2)).toString();
         var alarmMin = Math.floor(Math.random() * 60).toString();
         var alarmTime = moment(alarmHour + ":" + alarmMin, format);
 
@@ -70,6 +74,7 @@ function generateAlarms(participant) {
 
         if (alarmTime.isBetween(wakeMoment, sleepMoment)) {
             alarmTimes.push(alarmHour + ":" + alarmMin);
+            time += 2 // new alarm every 2 hours
         }
     }
 
@@ -78,6 +83,8 @@ function generateAlarms(participant) {
 
 // Generate a random number between 'start' and 'end' numbers
 function generateInBetweenNumber(start, end) {
+    console.log('start: ' + start);
+    console.log('end: '+  end);
     return Math.floor(start + Math.random() * (end - start));
 }
 
@@ -87,26 +94,30 @@ function sendQuestions(timeNow) {
         var participants = JSON.parse(data);
         
         participants.forEach(function(participant){
-            // fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
-            fs.readFile(`./data/alarms/temp_id.JSON`, function (err, data) {
-                var alarms = JSON.parse(data);
-                var month = new Date().getMonth().toString();
-                var day = new Date().getDate().toString();
-
-                alarms.forEach(function(alarm) {
-                    if (alarm.date === month+"/"+day) {
-                        alarm.times.forEach(function(alarmTime) {
-                            if (timeNow === alarmTime) {
-                                pingParticipant('temp_id');
-                            }
-                        });
-                    }
-                });
+            fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
+                if (err) {
+                    console.log("Error opening alarm file");
+                }
+                else {        
+                    var alarms = JSON.parse(data);
+                    var month = new Date().getMonth().toString();
+                    var day = new Date().getDate().toString();
+                    
+                    alarms.forEach(function(alarm) {
+                        if (alarm.date === month+"/"+day) {
+                            alarm.times.forEach(function(alarmTime) {
+                                if (timeNow === alarmTime) {
+                                    pingParticipant(participant.id);
+                                }
+                            });
+                        }
+                    });
+                }
             });
         });
     });
 }
 
 function pingParticipant(id) {
-    console.log("PINGING YOU");
+    startSession(id);
 }

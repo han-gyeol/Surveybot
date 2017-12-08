@@ -1,32 +1,17 @@
-const express = require('express')
-const Bot = require('messenger-bot')
+'use strict';
+const BootBot = require('bootbot');
+const initDialogs = require('./dialogs');
+const clock = require('./clock.js');
 
-const app = express();
+const bot = new BootBot({
+    accessToken: 'EAARJA41lo9EBABA80zYkkX1A1qHCsKSZBzkNhdEuLzdMQZBsLR5KoNrgPlMNxHcfZA5ZCyBEF1kumjlgMvbRgJmsY0ShJXWbWSVdfDFMcdjkgOgr36UquT9DSCfXidrtVZCZC2Tb1sLCbaLgWD7mSvaG9eqC1PbTZB8zCKrLV7NsQZDZD',
+    verifyToken: 'all-your-base-are-belong-to-us',
+    appSecret: '4fa260b39f7be65b2416fe699592e933'
+});
 
-let bot = new Bot({
-  token: process.env.PAGE_ACCESS_TOKEN,
-  verify: process.env.VERIFICATION_TOKEN,
-  app_secret: process.env.APP_SECRET
-})
+initDialogs(bot);
+bot.start();
 
-bot.on('error', (err) => {
-  console.log(err.message)
-})
 
-bot.on('message', (payload, reply) => {
-  let text = payload.message.text
-
-  bot.getProfile(payload.sender.id, (err, profile) => {
-    if (err) throw err
-
-    reply({ text }, (err) => {
-      if (err) throw err
-
-      console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
-    })
-  })
-})
-
-app.use(bot.middleware());
-app.listen(3000);
-console.log('Echo bot server running at port 3000.')
+const startSession = require('./dialogs/session.js').startSession;
+startSession('1642683679098021');

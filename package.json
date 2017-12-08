@@ -9,12 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bootbot": "^1.0.14",
     "express": "^4.16.2",
-    "facebook-messenger-bot": "^0.2.0",
-    "messenger-bot": "^2.4.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2105": "0.0.0"
+    "messenger-bot": "^2.4.0",
+    "moment": "^2.19.3"
   }
 }
