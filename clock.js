@@ -52,17 +52,6 @@ function generateAlarms(participant) {
     var sleepTime = participant.sleep.split(":");
     var alarmTimes = [];
 
-    // for (var i = 0; i < 7; i++) {
-    //     var alarmHour;
-    //     var alarmMin;
-    //     do {
-    //         alarmHour = generateInBetweenNumber(parseInt(wakeTime[HOUR]), parseInt(sleepTime[HOUR])).toString();
-    //         alarmMin = Math.floor(Math.random() * 60).toString();
-    //     }
-    //     while ( (alarmHour === wakeTime[HOUR] && alarmMin < wakeTime[MIN]) || (alarmHour === sleepTime[HOUR] && alarmMin > sleepTime[MIN]) );
-    //     alarmTimes.push(alarmHour + ":" + alarmMin);
-    // }
-
     var time = parseInt(wakeTime[HOUR]);
     while (alarmTimes.length < 7) {
         var alarmHour = generateInBetweenNumber(time, (time+2)).toString();
