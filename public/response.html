@@ -3,14 +3,21 @@
 
 <body>
 
-    <h1>Responses</h1>
+    <h1 id="header"></h1>
 
     <script>
         var _table_ = document.createElement('table'),
             _tr_ = document.createElement('tr'),
             _th_ = document.createElement('th'),
-            _td_ = document.createElement('td');
-        _a_ = document.createElement('a');
+            _td_ = document.createElement('td'),
+            _button_ = document.createElement('button');
+
+        var header = document.getElementById('header');
+        var button = _button_.cloneNode(false);
+        button.setAttribute('class', 'button');
+        button.appendChild(document.createTextNode('Download CSV'));
+        document.body.appendChild(button);
+
 
         // Builds the HTML Table out of myList json data from Ivy restful service.
         function buildHtmlTable(arr) {
@@ -68,6 +75,8 @@
             }
         };
         var participant_id = GetURLParameter('id');
+        header.appendChild(document.createTextNode(`Responses by ${participant_id}`));
+        button.setAttribute('onclick', `window.location.href='/csv?id=${participant_id}'`)
         xhttp.open("GET", "/response?id=" + participant_id, true);
         xhttp.send();
     </script>
