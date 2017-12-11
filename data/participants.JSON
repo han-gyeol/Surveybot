@@ -2,13 +2,13 @@
     {
         "id": "1642683679098021",
         "name": "Han Gyeol",
-        "wake": "07:00",
-        "sleep": "23:00"
+        "wake": "23:00",
+        "sleep": "13:00"
     },
     {
         "id": "1642683679098021",
         "name": "Han Gyeol",
-        "wake": "07:00",
-        "sleep": "23:00"
+        "wake": "Invalid date",
+        "sleep": "Invalid date"
     }
 ]

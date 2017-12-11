@@ -6,31 +6,36 @@ const startSession = require('./dialogs/session.js').startSession;
 
 // tick every 60 sec
 setInterval(function() {
-    var date = new Date();
-    var hour = date.getHours();
-    var min = date.getMinutes();
-    var time = hour + ":" + min;
+    // var date = new Date();
+    // var hour = date.getHours();
+    // var min = date.getMinutes();
+    // var time = hour + ":" + min;
+
+    var time = moment.utc().format('HH:mm')
 
     setAlarms(time);
     sendQuestions(time);
 
-}, 60000);
+}, 60*1000);
 
 
 // Reset alarms at 4AM everyday
 function setAlarms(time) {
-    if (time === '21:44' || time === '0:48') {
-        console.log("SETTING ALARM");
-    // if (time === '04:00' || time === '4:00') {
+    // if(true){
+        // console.log("SETTING ALARM");
+    if (time === '04:00' || time === '4:00') {
         fs.readFile(`./data/participants.JSON`, function (err, data) {
             var participants = JSON.parse(data);
 
             participants.forEach(function(participant){
                 fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
+                    if (err) console.log('Error on reading alarm file');
+
                     var alarms = JSON.parse(data);
                     var month = (new Date().getMonth()+1).toString();
                     var day = new Date().getDate().toString();
                     var alarmTimes = generateAlarms(participant);
+                    console.log(alarmTimes);
 
                     alarms.push({
                         date: month + "/" + day,
@@ -56,15 +61,24 @@ function generateAlarms(participant) {
     while (alarmTimes.length < 7) {
         var alarmHour = generateInBetweenNumber(time, (time+2)).toString();
         var alarmMin = Math.floor(Math.random() * 60).toString();
-        var alarmTime = moment(alarmHour + ":" + alarmMin, format);
+        
+        alarmTimes.push(alarmHour + ":" + alarmMin);
+        time = (time + 2) % 24;
+        
+        // var alarmTime = moment(alarmHour + ":" + alarmMin, format);
+        // var wakeMoment = moment(participant.wake, format);
+        // var sleepMoment = moment(participant.sleep, format);
 
-        var wakeMoment = moment(participant.wake, format);
-        var sleepMoment = moment(participant.sleep, format);
+        // console.log("----------------------------")
+        // console.log(alarmTime.format('HH:mm'));
+        // console.log(wakeMoment.format('HH:mm'));
+        // console.log(sleepMoment.format('HH:mm'));
+        // console.log("----------------------------")
 
-        if (alarmTime.isBetween(wakeMoment, sleepMoment)) {
-            alarmTimes.push(alarmHour + ":" + alarmMin);
-            time += 2 // new alarm every 2 hours
-        }
+        // if (alarmTime.isBetween(wakeMoment, sleepMoment)) {
+        //     alarmTimes.push(alarmHour + ":" + alarmMin);
+        //     time = (time + 2) % 24 // new alarm every 2 hours
+        // }
     }
 
     return alarmTimes;
@@ -72,7 +86,10 @@ function generateAlarms(participant) {
 
 // Generate a random number between 'start' and 'end' numbers
 function generateInBetweenNumber(start, end) {
-    return Math.floor(start + Math.random() * (end - start));
+    var timeDiff = end - start;
+    if (timeDiff < 0) timeDiff+=24;
+    var number = (Math.floor(start + Math.random() * timeDiff)%24).toString();
+    return (number.length === 1) ? '0'+number : number; 
 }
 
 // Send questions to all registered participants
@@ -85,13 +102,14 @@ function sendQuestions(timeNow) {
                 if (err) {
                     console.log("Error opening alarm file");
                 }
-                else {        
+                else {
                     var alarms = JSON.parse(data);
                     var month = new Date().getMonth().toString();
                     var day = new Date().getDate().toString();
                     
                     alarms.forEach(function(alarm) {
-                        if (alarm.date === month+"/"+day) {
+                        var today = (parseInt(month)+1).toString()+"/"+day;
+                        if (alarm.date === today) {
                             alarm.times.forEach(function(alarmTime) {
                                 if (timeNow === alarmTime) {
                                     pingParticipant(participant.id);

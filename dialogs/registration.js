@@ -1,5 +1,5 @@
 const fs = require('fs');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const startSurvey = require('./session.js').startSurvey;
 
 function initDialog(bot) {
@@ -18,17 +18,23 @@ function initDialog(bot) {
 
         const askWakeupTime = (convo) => {
             convo.ask(`Would you tell me what time you usually wake up? (e.g.: 07:00)`, (payload, convo) => {
-                const text = moment(payload.message.text, "h:mm A").format("HH:mm");
-                convo.set('wakeupTime', text);
-                convo.say(`Your wakeup time is ${text}`).then(() => askSleepTime(convo));
+                const time = moment.tz("2016-06-01 " + payload.message.text, "Asia/Seoul");
+                // const time = moment.tz(payload.message.text, convo.get('timezone'));
+                const wakeupTime = time.format("HH:mm");
+                const utc = time.tz('Etc/Utc');
+                convo.set('wakeupTime', utc.format("HH:mm"));
+                convo.say(`Your wakeup time is ${wakeupTime}`).then(() => askSleepTime(convo));
             });
         };
         
         const askSleepTime = (convo) => {
             convo.ask(`Would you tell me what time you usually go to sleep? (e.g.: 23:00)`, (payload, convo) => {
-                const text = moment(payload.message.text, "h:mm A").format("HH:mm");
-                convo.set('sleepTime', text);
-                convo.say(`Your sleep time is ${text}`).then(() => registerParticipant(convo));
+                const time = moment.tz("2016-06-01 " + payload.message.text, "Asia/Seoul");
+                // const time = moment.tz(payload.message.text, convo.get('timezone'));
+                const sleepTime = time.format("HH:mm");
+                const utc = time.tz('Etc/Utc');
+                convo.set('sleepTime', utc.format("HH:mm"));
+                convo.say(`Your sleep time is ${sleepTime}`).then(() => registerParticipant(convo));
             });
         };
 
