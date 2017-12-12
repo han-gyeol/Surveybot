@@ -30,8 +30,8 @@ d.  4\n
 e.  5 = Very much so\n`,
             quickReplies: ['a', 'b', 'c', 'd', 'e']
         }, (payload, convo) => {
-            const text = payload.message.text;
-            if (['a', 'b', 'c', 'd', 'e'].includes(text.trim())) {
+            const text = payload.message.text.trim().toLowerCase();
+            if (['a', 'b', 'c', 'd', 'e'].includes(text)) {
                 convo.set('q1', text);
                 clearTimeout(q1Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question2(convo));
@@ -56,8 +56,8 @@ f.  6\n
 g.  7 = Strongly agree\n`,
             quickReplies: ['a', 'b', 'c', 'd', 'e', 'f', 'g']
         }, (payload, convo) => {
-            const text = payload.message.text;
-            if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(text.trim())) {
+            const text = payload.message.text.trim().toLowerCase();
+            if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(text)) {
                 convo.set('q2', text);
                 clearTimeout(q2Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question3(convo));
@@ -79,7 +79,7 @@ d.  Alone\n
 e.  Others (please specify. E.g. e(my professor))\n
 *select all that apply. E.g. a,b,d OR b,e(my professor)`,
             (payload, convo) => {
-                const text = payload.message.text;
+                const text = payload.message.text.trim().toLowerCase();
                 convo.set('q3', text);
                 clearTimeout(q3Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => {
@@ -102,8 +102,8 @@ d.  4\n
 e.  5 = Completely included\n`,
             quickReplies: ['a', 'b', 'c', 'd', 'e']
         }, (payload, convo) => {
-            const text = payload.message.text;
-            if (['a', 'b', 'c', 'd', 'e'].includes(text.trim())) {
+            const text = payload.message.text.trim().toLowerCase();
+            if (['a', 'b', 'c', 'd', 'e'].includes(text)) {
                 convo.set('q4', text);
                 clearTimeout(q4Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question5(convo));
@@ -123,8 +123,8 @@ a.  Used their mobile phone\n
 b.  Did not use their mobile phone\n`,
             quickReplies: ['a', 'b']
         }, (payload, convo) => {
-            const text = payload.message.text;
-            if (['a', 'b'].includes(text.trim())) {
+            const text = payload.message.text.trim().toLowerCase();
+            if (['a', 'b'].includes(text)) {
                 convo.set('q5', text);
                 clearTimeout(q5Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question6(convo));
@@ -144,8 +144,8 @@ a.  Used my mobile phone (for purposes other than this Facebook conversation\n
 b.  Did not use my mobile phone\n`,
             quickReplies: ['a', 'b']
         }, (payload, convo) => {
-            const text = payload.message.text;
-            if (['a', 'b'].includes(text.trim())) {
+            const text = payload.message.text.trim().toLowerCase();
+            if (['a', 'b'].includes(text)) {
                 convo.set('q6', text);
                 clearTimeout(q6Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => sendLongSummary(convo));
