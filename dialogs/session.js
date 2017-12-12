@@ -2,6 +2,7 @@ const fs = require('fs');
 const moment = require('moment');
 
 let bot = null;
+const timeout = 20*60*1000 // 20min
 
 function initDialog(botObj) {
     bot = botObj;
@@ -19,7 +20,7 @@ function startSurvey(payload, chat, data) {
 
     const question1 = (convo) => {
         //Set timeout of 20min
-        const q1Timeout = setTimeout(() => sessionTimeout(convo), 20*60*1000);
+        const q1Timeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask({
             text:
 `Right now, I feel happy:\n
@@ -43,7 +44,7 @@ e.  5 = Very much so\n`,
 
     const question2 = (convo) => {
         //Set timeout of 20min
-        const q2Timeout = setTimeout(() => sessionTimeout(convo), 20*60*1000);
+        const q2Timeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask({
             text:
 `Right now, I feel good about myself.\n
@@ -69,7 +70,7 @@ g.  7 = Strongly agree\n`,
 
     const question3 = (convo) => {
         //Set timeout of 20min
-        const q3Timeout = setTimeout(() => sessionTimeout(convo), 20*60*1000);
+        const q3Timeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask(
 `In the past 20 minutes, I was with:\n
 a.  My boyfriend / girlfriend / partner / spouse\n
@@ -91,7 +92,7 @@ e.  Others (please specify. E.g. e(my professor))\n
 
     const question4 = (convo) => {
         //Set timeout of 20min
-        const q4Timeout = setTimeout(() => sessionTimeout(convo), 20*60*1000);
+        const q4Timeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask({
             text:
 `In the past 20 minutes, the person/people I was with made me feel:\n
@@ -115,7 +116,7 @@ e.  5 = Completely included\n`,
 
     const question5 = (convo) => {
         //Set timeout of 20min
-        const q5Timeout = setTimeout(() => sessionTimeout(convo), 20*60*1000);
+        const q5Timeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask({
             text:
 `In the past 20 minutes, the person/people I was with:\n
@@ -136,7 +137,7 @@ b.  Did not use their mobile phone\n`,
 
     const question6 = (convo) => {
         //Set timeout of 20min
-        const q6Timeout = setTimeout(() => sessionTimeout(convo), 20*60*1000);
+        const q6Timeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask({
             text:
 `In the past 20 minutes, I:\n
