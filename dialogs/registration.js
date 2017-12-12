@@ -99,8 +99,7 @@ function initDialog(bot) {
         };
 
         chat.conversation((convo) => {
-            startTrial(convo);
-            // startRegistration(convo);
+            startRegistration(convo);
         });
     });
 }
