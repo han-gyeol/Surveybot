@@ -2,6 +2,7 @@ const fs = require('fs');
 const moment = require('moment-timezone');
 const startSurvey = require('./session.js').startSurvey;
 
+const timeout = 20*60*1000 // 20min
 
 function initDialog(bot) {
 
@@ -16,9 +17,11 @@ function initDialog(bot) {
         };
 
         const askTimeZone = (convo) => {
+            const timeZoneTimeout = setTimeout(() => sessionTimeout(convo), timeout);
             convo.ask('In which timezone do you live? Please refer to the table in this link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. Copy and paste(including slash) your region from TZ column (e.g. Asia/Sinagpore).',
             (payload, convo) => {
                 const timezone = payload.message.text;
+                clearTimeout(timeZoneTimeout);
                 if (moment.tz.zone(timezone)) {
                     convo.set('timezone', timezone);
                     convo.say(`Your timezone is ${timezone}.`).then(() => askWakeupTime(convo));
@@ -29,8 +32,10 @@ function initDialog(bot) {
         };
 
         const askWakeupTime = (convo) => {
+            const wakeTimeout = setTimeout(() => sessionTimeout(convo), timeout);
             convo.ask(`Would you tell me what time you usually wake up? (e.g.: 07:00)`, (payload, convo) => {
                 const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
+                clearTimeout(wakeTimeout);
                 if (time.isValid()) {
                     const wakeupTime = time.format("HH:mm");
                     const utc = time.tz('Etc/Utc');
@@ -44,8 +49,10 @@ function initDialog(bot) {
         };
 
         const askSleepTime = (convo) => {
+            const sleepTimeout = setTimeout(() => sessionTimeout(convo), timeout);
             convo.ask(`Would you tell me what time you usually go to sleep? (e.g.: 23:00)`, (payload, convo) => {
                 const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
+                clearTimeout(sleepTimeout);
                 if (time.isValid()) {
                     const sleepTime = time.format("HH:mm");
                     const utc = time.tz('Etc/Utc');
@@ -64,7 +71,8 @@ function initDialog(bot) {
                 "id": convo.get('participant_id'),
                 "name": convo.get('participant_name'),
                 "wake": convo.get('wakeupTime'),
-                "sleep": convo.get('sleepTime')
+                "sleep": convo.get('sleepTime'),
+                "timezone": convo.get('timezone')
             };
             fs.readFile('./data/participants.JSON', function (err, data) {
                 var json = JSON.parse(data)
@@ -98,6 +106,10 @@ function initDialog(bot) {
             convo.say('If I do not response to your message, please send the message again. There might be a network problem!')
             .then(() => startSurvey(payload, chat, null));
         };
+
+        const sessionTimeout = (convo) => {
+            convo.say('You did not asnwer the question within 20 minutes. Please restart the registraion by typing \"start\"').then(() => convo.end());
+        }
 
         chat.conversation((convo) => {
             startRegistration(convo);

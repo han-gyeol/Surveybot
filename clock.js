@@ -20,6 +20,7 @@ function setAlarms(time) {
         
         participants.forEach(function(participant){
             if (time === participant.wake) {
+                console.log(`Setting alarms for ${participant.name}`);
                 fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
                     if (err) console.log('Error on reading alarm file');
 
@@ -100,6 +101,7 @@ function sendQuestions(timeNow) {
                         if (alarm.date === today) {
                             alarm.times.forEach(function(alarmTime) {
                                 if (timeNow === alarmTime) {
+                                    console.log(`pinging ${participant.name} at ${timenow}`);
                                     pingParticipant(participant.id);
                                 }
                             });

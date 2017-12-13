@@ -32,9 +32,9 @@ e.  5 = Very much so\n`,
             quickReplies: ['a', 'b', 'c', 'd', 'e']
         }, (payload, convo) => {
             const text = payload.message.text.trim().toLowerCase();
+            clearTimeout(q1Timeout);
             if (['a', 'b', 'c', 'd', 'e'].includes(text)) {
                 convo.set('q1', text);
-                clearTimeout(q1Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question2(convo));
             } else {
                 convo.say('Your response was invalid. Please try again with a different format!').then(() => question1(convo));
@@ -58,9 +58,9 @@ g.  7 = Strongly agree\n`,
             quickReplies: ['a', 'b', 'c', 'd', 'e', 'f', 'g']
         }, (payload, convo) => {
             const text = payload.message.text.trim().toLowerCase();
+            clearTimeout(q2Timeout);
             if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(text)) {
                 convo.set('q2', text);
-                clearTimeout(q2Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question3(convo));
             } else {
                 convo.say('Your response was invalid. Please try again with a different format!').then(() => question2(convo));
@@ -80,9 +80,9 @@ d.  Alone\n
 e.  Others (please specify. E.g. e(my professor))\n
 *select all that apply. E.g. a,b,d OR b,e(my professor)`,
             (payload, convo) => {
+                clearTimeout(q3Timeout);
                 const text = payload.message.text.trim().toLowerCase();
                 convo.set('q3', text);
-                clearTimeout(q3Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => {
                     if (text === 'd' || text.toLowerCase() === 'alone') sendShortSummary(convo);
                     else question4(convo)
@@ -104,9 +104,9 @@ e.  5 = Completely included\n`,
             quickReplies: ['a', 'b', 'c', 'd', 'e']
         }, (payload, convo) => {
             const text = payload.message.text.trim().toLowerCase();
+            clearTimeout(q4Timeout);
             if (['a', 'b', 'c', 'd', 'e'].includes(text)) {
                 convo.set('q4', text);
-                clearTimeout(q4Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question5(convo));
             } else {
                 convo.say('Your response was invalid. Please try again with a different format!').then(() => question4(convo));
@@ -125,9 +125,9 @@ b.  Did not use their mobile phone\n`,
             quickReplies: ['a', 'b']
         }, (payload, convo) => {
             const text = payload.message.text.trim().toLowerCase();
+            clearTimeout(q5Timeout);
             if (['a', 'b'].includes(text)) {
                 convo.set('q5', text);
-                clearTimeout(q5Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => question6(convo));
             } else {
                 convo.say('Your response was invalid. Please try again with a different format!').then(() => question5(convo));
@@ -146,9 +146,9 @@ b.  Did not use my mobile phone\n`,
             quickReplies: ['a', 'b']
         }, (payload, convo) => {
             const text = payload.message.text.trim().toLowerCase();
+            clearTimeout(q6Timeout);
             if (['a', 'b'].includes(text)) {
                 convo.set('q6', text);
-                clearTimeout(q6Timeout);
                 convo.say(`Your response of (${text}) has been saved.`).then(() => sendLongSummary(convo));
             } else {
                 convo.say('Your response was invalid. Please try again with a different format!').then(() => question6(convo));
