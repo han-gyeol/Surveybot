@@ -101,7 +101,7 @@ function sendQuestions(timeNow) {
                         if (alarm.date === today) {
                             alarm.times.forEach(function(alarmTime) {
                                 if (timeNow === alarmTime) {
-                                    console.log(`pinging ${participant.name} at ${timenow}`);
+                                    console.log(`pinging ${participant.name} at ${timeNow}`);
                                     pingParticipant(participant.id);
                                 }
                             });
