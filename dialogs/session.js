@@ -157,13 +157,15 @@ b.  Did not use my mobile phone\n`,
     }
 
     const sendShortSummary = (convo) => {
-        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}).`)
-            .then(() => registerResponse(convo));
+        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}).`);
+        convo.say('See you next survey time!')
+        .then(() => registerResponse(convo));
     };
 
     const sendLongSummary = (convo) => {
-        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}), (${convo.get('q4')}), (${convo.get('q5')}), (${convo.get('q6')}).`)
-            .then(() => registerResponse(convo));
+        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}), (${convo.get('q4')}), (${convo.get('q5')}), (${convo.get('q6')}).`);
+        convo.say('See you next survey time!')
+        .then(() => registerResponse(convo));
     };
 
     const registerResponse = (convo) => {

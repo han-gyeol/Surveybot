@@ -6,7 +6,7 @@ const startSession = require('./dialogs/session.js').startSession;
 
 // tick every 60 sec
 setInterval(function() {
-    var time = moment.utc().format('HH:mm')
+    var time = moment.utc().format('HH:mm');
 
     setAlarms(time);
     sendQuestions(time);
@@ -15,11 +15,11 @@ setInterval(function() {
 
 // Reset alarms at 4AM everyday
 function setAlarms(time) {
-    if (time === '04:00' || time === '4:00') {
-        fs.readFile(`./data/participants.JSON`, function (err, data) {
-            var participants = JSON.parse(data);
-
-            participants.forEach(function(participant){
+    fs.readFile(`./data/participants.JSON`, function (err, data) {
+        var participants = JSON.parse(data);
+        
+        participants.forEach(function(participant){
+            if (time === participant.wake) {
                 fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
                     if (err) console.log('Error on reading alarm file');
 
@@ -36,9 +36,9 @@ function setAlarms(time) {
 
                     fs.writeFileSync(`./data/alarms/${participant.id}.JSON`, JSON.stringify(alarms, null, 4));
                 });
-            });
+            }
         });
-    }
+    });
 }
 
 // Generate new alarms for the day
