@@ -9,6 +9,7 @@ function initDialog(botObj) {
 }
 
 function startSession(participant_id) {
+    const readTimeout = setTimeout(() => sessionTimeout(convo), timeout);
     bot.getUserProfile(participant_id).then((user) => {
         bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`, {
             onRead: startSurvey
@@ -17,6 +18,7 @@ function startSession(participant_id) {
 }
 
 function startSurvey(payload, chat, data) {
+    if (readTimeout) clearTimeout(readTimeout);
 
     const question1 = (convo) => {
         //Set timeout of 20min
