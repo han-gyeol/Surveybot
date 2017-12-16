@@ -9,9 +9,23 @@ function initDialog(botObj) {
 }
 
 function startSession(participant_id) {
+    let timeOver = false;
+    const sessionStartTimeout = setTimeout(() => {
+        timeOver = true;
+    }, timeout);
+
     bot.getUserProfile(participant_id).then((user) => {
-        bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`, {onDelivery: (payload, chat, data) => startSurvey(payload, chat, data)});
+        bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`, {
+            onRead: handleTimeout
+        });
     });
+    
+    function handleTimeout(payload, chat, data) {
+        if (!timeOver) {
+            clearTimeout(sessionStartTimeout);
+            startSurvey(payload, chat, data);
+        }
+    }
 }
 
 function startSurvey(payload, chat, data) {

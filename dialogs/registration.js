@@ -122,7 +122,7 @@ function initDialog(bot) {
         convo.say(`Great! I will poke you to ask you questions seven times a day at random times between ${convo.get('wakeupTimeLocal')} and ${convo.get('sleepTimeLocal')}. Let's get to the trial questions!`);
         convo.say('Please ensure that you response to the question withint 20min. If you don\'t, the session will end and there will be no response registerd.');
         convo.say('If I do not response to your message, please send the message again. There might be a network problem!')
-        .then(() => startSurvey(payload, chat, null));
+        .then(() => startSurvey(payload, chat, 'registration'));
     };
 
     const sessionTimeout = (payload, chat, convo) => {
