@@ -10,7 +10,7 @@ function initDialog(botObj) {
 
 function startSession(participant_id) {
     bot.getUserProfile(participant_id).then((user) => {
-        bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`).then(() => startSurvey(payload, chat, data));
+        bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`, {onDelivery: (payload, chat, data) => startSurvey(payload, chat, data)});
     });
 }
 
@@ -166,43 +166,44 @@ b.  Did not use my mobile phone\n`,
         .then(() => registerResponse(convo));
     };
 
+    const registerResponse = (convo) => {
+        const month = (new Date().getMonth()+1).toString();
+        const day = new Date().getDate().toString();
+        const hour = new Date().getHours();
+        const min = new Date().getMinutes();
+        const date = month + "/" + day; 
+        const time = hour + ":" + min;
+        // Add response
+        const response = {
+            "date": date,
+            "time": time,
+            "q1": (convo.get('q1')) ? convo.get('q1') : 'NIL',
+            "q2": (convo.get('q2')) ? convo.get('q2') : 'NIL',
+            "q3": (convo.get('q3')) ? convo.get('q3') : 'NIL',
+            "q4": (convo.get('q4')) ? convo.get('q4') : 'NIL',
+            "q5": (convo.get('q5')) ? convo.get('q5') : 'NIL',
+            "q6": (convo.get('q6')) ? convo.get('q6') : 'NIL'
+        }
+        const responsePath = `./data/responses/${convo.get('participant_id')}.JSON`;
+        fs.readFile(responsePath, function (err, data) {
+            var json = JSON.parse(data)
+            json.push(response);
+            fs.writeFileSync(responsePath, JSON.stringify(json, null, 4));
+        });
+    
+        convo.end();
+    }
+    
+    const sessionTimeout = (convo) => {
+        convo.say('You did not asnwer the question within 20 minutes. Ending the session without response.').then(() => registerResponse(convo));
+    }
+
     chat.conversation((convo) => {
         convo.set('participant_id', payload.sender.id);
         question1(convo);
     });
 }
 
-const registerResponse = (convo) => {
-    const month = (new Date().getMonth()+1).toString();
-    const day = new Date().getDate().toString();
-    const hour = new Date().getHours();
-    const min = new Date().getMinutes();
-    const date = month + "/" + day; 
-    const time = hour + ":" + min;
-    // Add response
-    const response = {
-        "date": date,
-        "time": time,
-        "q1": (convo.get('q1')) ? convo.get('q1') : 'NIL',
-        "q2": (convo.get('q2')) ? convo.get('q2') : 'NIL',
-        "q3": (convo.get('q3')) ? convo.get('q3') : 'NIL',
-        "q4": (convo.get('q4')) ? convo.get('q4') : 'NIL',
-        "q5": (convo.get('q5')) ? convo.get('q5') : 'NIL',
-        "q6": (convo.get('q6')) ? convo.get('q6') : 'NIL'
-    }
-    const responsePath = `./data/responses/${convo.get('participant_id')}.JSON`;
-    fs.readFile(responsePath, function (err, data) {
-        var json = JSON.parse(data)
-        json.push(response);
-        fs.writeFileSync(responsePath, JSON.stringify(json, null, 4));
-    });
-
-    convo.end();
-}
-
-const sessionTimeout = (convo) => {
-    convo.say('You did not asnwer the question within 20 minutes. Ending the session without response.').then(() => registerResponse(convo));
-}
 
 module.exports.initDialog = initDialog;
 module.exports.startSession = startSession;
