@@ -7,13 +7,13 @@ const timeout = 20*60*1000 // 20min
 function initDialog(bot) {
     bot.setGetStartedButton((payload, chat) => {
         chat.conversation((convo) => {
-            startRegistration(convo);
+            startRegistration(payload, chat, convo);
         });
     });
 
     // bot.hear('start', (payload, chat) => {
     //     chat.conversation((convo) => {
-    //         startRegistration(convo);
+    //         startRegistration(payload, chat, convo);
     //     });
     // });
 
@@ -25,7 +25,7 @@ function initDialog(bot) {
         chat.say('I am a chatbot that collects your responses of the survey you signed up for SynergyLab. After the registration process, you will be asked to answer the survey questions seven times a day at random times when you are awake. Please ensure that you response to the question withint 20min. If you don\'t, the session will end and there will be no response registerd.')
     });
     
-    const startRegistration = (convo) => {
+    const startRegistration = (payload, chat, convo) => {
         convo.set('participant_id', payload.sender.id);
         chat.getUserProfile().then((user) => {
             convo.set('participant_name', user.first_name);
@@ -33,7 +33,7 @@ function initDialog(bot) {
         });
     };
 
-    const askTimeZone = (convo) => {
+    const askTimeZone = (payload, chat, convo) => {
         const timeZoneTimeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask('In which timezone do you live? Please refer to the table in this link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. Copy and paste(including slash) your region from TZ column (e.g. Asia/Sinagpore).',
         (payload, convo) => {
@@ -48,7 +48,7 @@ function initDialog(bot) {
         });
     };
 
-    const askWakeupTime = (convo) => {
+    const askWakeupTime = (payload, chat, convo) => {
         const wakeTimeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask(`Would you tell me what time you usually wake up? (e.g.: 07:00)`, (payload, convo) => {
             const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
@@ -65,7 +65,7 @@ function initDialog(bot) {
         });
     };
 
-    const askSleepTime = (convo) => {
+    const askSleepTime = (payload, chat, convo) => {
         const sleepTimeout = setTimeout(() => sessionTimeout(convo), timeout);
         convo.ask(`Would you tell me what time you usually go to sleep? (e.g.: 23:00)`, (payload, convo) => {
             const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
@@ -82,7 +82,7 @@ function initDialog(bot) {
         });
     };
 
-    const registerParticipant = (convo) => {
+    const registerParticipant = (payload, chat, convo) => {
         // Initialize participant file
         const participant = {
             "id": convo.get('participant_id'),
@@ -118,14 +118,14 @@ function initDialog(bot) {
         startTrial(convo);
     }
 
-    const startTrial = (convo) => {
+    const startTrial = (payload, chat, convo) => {
         convo.say(`Great! I will poke you to ask you questions seven times a day at random times between ${convo.get('wakeupTimeLocal')} and ${convo.get('sleepTimeLocal')}. Let's get to the trial questions!`);
         convo.say('Please ensure that you response to the question withint 20min. If you don\'t, the session will end and there will be no response registerd.');
         convo.say('If I do not response to your message, please send the message again. There might be a network problem!')
         .then(() => startSurvey(payload, chat, null));
     };
 
-    const sessionTimeout = (convo) => {
+    const sessionTimeout = (payload, chat, convo) => {
         convo.say('You did not asnwer the question within 20 minutes. Please restart the registraion by typing \"start\"').then(() => convo.end());
     }
 }
