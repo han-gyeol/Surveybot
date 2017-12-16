@@ -11,11 +11,11 @@ function initDialog(bot) {
         });
     });
 
-    // bot.hear('start', (payload, chat) => {
-    //     chat.conversation((convo) => {
-    //         startRegistration(payload, chat, convo);
-    //     });
-    // });
+    bot.hear('start', (payload, chat) => {
+        chat.conversation((convo) => {
+            startRegistration(payload, chat, convo);
+        });
+    });
 
     bot.hear('help', (payload, chat) => {
         chat.say('I am a chatbot that collects your responses of the survey you signed up for SynergyLab. After the registration process, you will be asked to answer the survey questions seven times a day at random times when you are awake. Please ensure that you response to the question withint 20min. If you don\'t, the session will end and there will be no response registerd.')

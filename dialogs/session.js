@@ -9,17 +9,9 @@ function initDialog(botObj) {
 }
 
 function startSession(participant_id) {
-    const readTimeout = setTimeout(() => sessionTimeout(convo), timeout);
     bot.getUserProfile(participant_id).then((user) => {
-        bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`, {
-            onRead: clearReadTimeout
-        });
+        bot.say(participant_id, `Hi ${user.first_name}, it\'s time for survey!`).then(() => startSurvey(payload, chat, data));
     });
-
-    const clearReadTimeout = (payload, chat, data) => {
-        clearTimeout(readTimeout);
-        startSurvey(payload, chat, data);
-    }
 }
 
 function startSurvey(payload, chat, data) {
