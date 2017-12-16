@@ -29,27 +29,27 @@ function initDialog(bot) {
         convo.set('participant_id', payload.sender.id);
         chat.getUserProfile().then((user) => {
             convo.set('participant_name', user.first_name);
-            chat.say(`Hello ${user.first_name}! Thank you for participating our study!`).then(() => askTimeZone(convo));
+            chat.say(`Hello ${user.first_name}! Thank you for participating our study!`).then(() => askTimeZone(payload, chat, convo));
         });
     };
 
     const askTimeZone = (payload, chat, convo) => {
-        const timeZoneTimeout = setTimeout(() => sessionTimeout(convo), timeout);
+        const timeZoneTimeout = setTimeout(() => sessionTimeout(payload, chat, convo), timeout);
         convo.ask('In which timezone do you live? Please refer to the table in this link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. Copy and paste(including slash) your region from TZ column (e.g. Asia/Sinagpore).',
         (payload, convo) => {
             const timezone = payload.message.text;
             clearTimeout(timeZoneTimeout);
             if (moment.tz.zone(timezone)) {
                 convo.set('timezone', timezone);
-                convo.say(`Your timezone is ${timezone}.`).then(() => askWakeupTime(convo));
+                convo.say(`Your timezone is ${timezone}.`).then(() => askWakeupTime(payload, chat, convo));
             } else {
-                chat.say(`Your timezone input of ${timezone} is invalid. Please check one more time!`).then(() => askTimeZone(convo));
+                chat.say(`Your timezone input of ${timezone} is invalid. Please check one more time!`).then(() => askTimeZone(payload, chat, convo));
             }
         });
     };
 
     const askWakeupTime = (payload, chat, convo) => {
-        const wakeTimeout = setTimeout(() => sessionTimeout(convo), timeout);
+        const wakeTimeout = setTimeout(() => sessionTimeout(payload, chat, convo), timeout);
         convo.ask(`Would you tell me what time you usually wake up? (e.g.: 07:00)`, (payload, convo) => {
             const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
             clearTimeout(wakeTimeout);
@@ -58,15 +58,15 @@ function initDialog(bot) {
                 const utc = time.tz('Etc/Utc');
                 convo.set('wakeupTimeLocal', wakeupTime);
                 convo.set('wakeupTime', utc.format("HH:mm"));
-                convo.say(`Your wakeup time is ${wakeupTime}`).then(() => askSleepTime(convo));
+                convo.say(`Your wakeup time is ${wakeupTime}`).then(() => askSleepTime(payload, chat, convo));
             } else {
-                convo.say(`Your time input of ${payload.message.text} is invalid, please try again with a different format!`).then(() => askWakeupTime(convo));
+                convo.say(`Your time input of ${payload.message.text} is invalid, please try again with a different format!`).then(() => askWakeupTime(payload, chat, convo));
             }
         });
     };
 
     const askSleepTime = (payload, chat, convo) => {
-        const sleepTimeout = setTimeout(() => sessionTimeout(convo), timeout);
+        const sleepTimeout = setTimeout(() => sessionTimeout(payload, chat, convo), timeout);
         convo.ask(`Would you tell me what time you usually go to sleep? (e.g.: 23:00)`, (payload, convo) => {
             const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
             clearTimeout(sleepTimeout);
@@ -75,9 +75,9 @@ function initDialog(bot) {
                 const utc = time.tz('Etc/Utc');
                 convo.set('sleepTimeLocal', sleepTime);
                 convo.set('sleepTime', utc.format("HH:mm"));
-                convo.say(`Your sleep time is ${sleepTime}`).then(() => registerParticipant(convo));
+                convo.say(`Your sleep time is ${sleepTime}`).then(() => registerParticipant(payload, chat, convo));
             } else {
-                convo.say(`Your time input of ${payload.message.text} is invalid, please try again with a different format!`).then(() => askSleepTime(convo));
+                convo.say(`Your time input of ${payload.message.text} is invalid, please try again with a different format!`).then(() => askSleepTime(payload, chat, convo));
             }
         });
     };
@@ -115,7 +115,7 @@ function initDialog(bot) {
             }
         });
 
-        startTrial(convo);
+        startTrial(payload, chat, convo);
     }
 
     const startTrial = (payload, chat, convo) => {
