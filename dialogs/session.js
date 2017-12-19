@@ -12,7 +12,7 @@ function startSession(participant_id) {
     let timeOver = false;
     const sessionStartTimeout = setTimeout(() => {
         timeOver = true;
-        bot.say('You did not response to the session within 20 min. Ending the session without response. Please be responsive to the next session!');
+        bot.say(participant_id, 'You did not response to the session within 20 min. Ending the session without response. Please be responsive in the next session!');
     }, timeout);
 
     bot.getUserProfile(participant_id).then((user) => {
@@ -26,10 +26,18 @@ function startSession(participant_id) {
             clearTimeout(sessionStartTimeout);
             startSurvey(payload, chat, data);
         }
+        else {
+
+        }
     }
 }
 
 function startSurvey(payload, chat, data) {
+
+    const introudction = (convo) => {
+        convo.say('Please ensure that you response to the question within 20 min. If you don\'t, the session will end and there will be no response registerd.')
+        .then(() => question1(convo));
+    }
 
     const question1 = (convo) => {
         //Set timeout of 20min
@@ -219,7 +227,7 @@ b.  Did not use my mobile phone\n`,
 
     chat.conversation((convo) => {
         convo.set('participant_id', payload.sender.id);
-        question1(convo);
+        introduction(convo);
     });
 }
 
