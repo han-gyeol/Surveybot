@@ -12,6 +12,7 @@ function startSession(participant_id) {
     let timeOver = false;
     const sessionStartTimeout = setTimeout(() => {
         timeOver = true;
+        bot.say('You did not response to the session within 20 min. Ending the session without response. Please be responsive to the next session!');
     }, timeout);
 
     bot.getUserProfile(participant_id).then((user) => {
@@ -169,15 +170,19 @@ b.  Did not use my mobile phone\n`,
     }
 
     const sendShortSummary = (convo) => {
-        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}).`);
-        convo.say('See you next survey time!')
-        .then(() => registerResponse(convo));
+        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}).`)
+        .then(() => 
+            convo.say('See you next survey time!')
+            .then(() => registerResponse(convo))
+        );
     };
 
     const sendLongSummary = (convo) => {
-        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}), (${convo.get('q4')}), (${convo.get('q5')}), (${convo.get('q6')}).`);
-        convo.say('See you next survey time!')
-        .then(() => registerResponse(convo));
+        convo.say(`Thank you for your response! Your responses were (${convo.get('q1')}), (${convo.get('q2')}), (${convo.get('q3')}), (${convo.get('q4')}), (${convo.get('q5')}), (${convo.get('q6')}).`)
+        .then(() => 
+            convo.say('See you next survey time!')
+            .then(() => registerResponse(convo))
+        );
     };
 
     const registerResponse = (convo) => {

@@ -51,7 +51,8 @@ function initDialog(bot) {
     const askWakeupTime = (payload, chat, convo) => {
         const wakeTimeout = setTimeout(() => sessionTimeout(payload, chat, convo), timeout);
         convo.ask(`Would you tell me what time you usually wake up? (e.g.: 07:00)`, (payload, convo) => {
-            const time = moment.tz('2017-06-01 ' + payload.message.text, convo.get('timezone'));
+            const timeInput = (payload.message.text.charAt(1) == ':')? ('0'+payload.message.text) : payload.message.text;
+            const time = moment.tz('2017-06-01 ' + timeInput, convo.get('timezone'));
             clearTimeout(wakeTimeout);
             if (time.isValid()) {
                 const wakeupTime = time.format("HH:mm");
