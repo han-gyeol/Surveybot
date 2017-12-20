@@ -20,20 +20,21 @@ function setAlarms(time) {
         
         participants.forEach(function(participant){
             if (time === participant.wake) {
-                var alarms = JSON.parse(data);
-                var month = (new Date().getMonth()+1).toString();
-                var day = new Date().getDate().toString();
-                var alarmTimes = generateAlarms(participant);
-                console.log(`Setting alarms for ${participant.name} on ${month}/${day} at ${time}`);
-                console.log(alarmTimes);
-
+                
                 fs.readFile(`./data/alarms/${participant.id}.JSON`, function (err, data) {
                     if (err) console.log('Error on reading alarm file');
-
+                    
+                    var alarms = JSON.parse(data);
+                    var month = (new Date().getMonth()+1).toString();
+                    var day = new Date().getDate().toString();
+                    var alarmTimes = generateAlarms(participant);
                     alarms.push({
                         date: month + "/" + day,
                         times: alarmTimes
                     });
+                    
+                    console.log(`Setting alarms for ${participant.name} on ${month}/${day} at ${time}`);
+                    console.log(alarmTimes);
 
                     fs.writeFileSync(`./data/alarms/${participant.id}.JSON`, JSON.stringify(alarms, null, 4));
                 });
