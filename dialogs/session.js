@@ -32,9 +32,7 @@ function startSession(participant_id) {
 function startSurvey(payload, chat, data) {
 
     const introduction = (convo) => {
-        convo.ask('Please ensure that you response to the question within 20 min. If you don\'t, the session will end and there will be no response registerd.',
-        (payload, convo) => {
-        })
+        convo.say('Please ensure that you response to the question within 20 min. If you don\'t, the session will end and there will be no response registerd.')
         .then(() => question1(convo));
     }
 
