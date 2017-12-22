@@ -32,7 +32,7 @@ function setAlarms(time) {
                         date: month + "/" + day,
                         times: alarmTimes
                     });
-                    
+
                     console.log(`Setting alarms for ${participant.name} on ${month}/${day} at ${time}`);
                     console.log(alarmTimes);
 
@@ -101,7 +101,7 @@ function sendQuestions(timeNow) {
                         var today = (parseInt(month)+1).toString()+"/"+day;
                         if (alarm.date === today) {
                             alarm.times.forEach(function(alarmTime) {
-                                if (timeNow === alarmTime) {
+                                if (sameTime(timeNow, alarmTime)) {
                                     console.log(`pinging ${participant.name} at ${timeNow}`);
                                     pingParticipant(participant.id);
                                 }
@@ -112,6 +112,17 @@ function sendQuestions(timeNow) {
             });
         });
     });
+}
+
+function sameTime(time1, time2) {
+    time1Array = time1.split(":");
+    time1Hour = parseInt(time1Array[0]);
+    time1Min = parseInt(time1Array[1]);
+    time2Array = time2.split(":");
+    time2Hour = parseInt(time2Array[0]);
+    time2Min = parseInt(time2Array[1]);
+
+    return (time1Hour === time2Hour) && (time1Min === time2Min);
 }
 
 function pingParticipant(id) {
